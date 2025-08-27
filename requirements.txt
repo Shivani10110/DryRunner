@@ -2,3 +2,5 @@ Flask
 openai
 python-dotenv
 colorama
+gunicorn
+
