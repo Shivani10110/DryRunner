@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>AI Dry Run — Web</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <div class="left">
+      <h2>Paste Code</h2>
+      <form method="post">
+        <textarea name="code" id="code" placeholder="Write or paste Python code here..." rows="22">{{ code|default('') }}</textarea>
+
+        <h3>Input values (stdin)</h3>
+        <textarea name="input_data" id="input_data" rows="4" placeholder="If your program uses input(), put values here (newline separated)">{{ input_data|default('') }}</textarea>
+
+        <div class="options">
+          <label><input type="radio" name="explain_mode" value="only_changes" {% if explain_mode=='only_changes' %}checked{% endif %}> Explain only on changes/errors (recommended)</label><br>
+          <label><input type="radio" name="explain_mode" value="all" {% if explain_mode=='all' %}checked{% endif %}> Explain every step (slower / costs more)</label>
+        </div>
+
+        <button type="submit" class="run-btn">Run Dry-Run</button>
+      </form>
+
+      <div class="examples">
+        <h4>Examples</h4>
+        <button onclick="loadExample('basic')">Load basic IndexError</button>
+        <button onclick="loadExample('dp')">Load Fibonacci DP</button>
+      </div>
+    </div>
+
+    <div class="right">
+      <h2>Dry-Run Output</h2>
+      {% if enriched is none %}
+        <div class="placeholder">Run code from the left to see step-by-step output here.</div>
+      {% else %}
+        <div class="meta">
+          <strong>Summary:</strong>
+          Exit code: {{ summary.exitcode }} |
+          Events: {{ summary.events_count }} |
+          {% if summary.tle %}<span class="alert">TLE suspected</span>{% endif %}
+          {% if summary.segfault %}<span class="alert">Segfault</span>{% endif %}
+        </div>
+
+        <div class="events">
+          {% for item in enriched %}
+            {% set evt = item.evt %}
+            <div class="event-card">
+              <div class="ev-header">
+                <span class="ev-type">{{ evt.type }}</span>
+                <span class="ev-line">Line {{ evt.lineno }}</span>
+                <code class="ev-code">{{ evt.code }}</code>
+              </div>
+
+              {% if item.explanation %}
+                <div class="explain">🧠 {{ item.explanation }}</div>
+              {% endif %}
+
+              {% if evt.locals %}
+                <div class="locals"><strong>Locals:</strong> <pre>{{ evt.locals | tojson(indent=0) }}</pre></div>
+              {% endif %}
+
+              {% if evt.added or evt.updated or evt.removed %}
+                <div class="changes">
+                  <strong>Changes:</strong>
+                  {% if evt.added %}<div class="c-added">+ added: {{ evt.added | tojson }}</div>{% endif %}
+                  {% if evt.updated %}<div class="c-updated">~ updated: {{ evt.updated | tojson }}</div>{% endif %}
+                  {% if evt.removed %}<div class="c-removed">- removed: {{ evt.removed | tojson }}</div>{% endif %}
+                </div>
+              {% endif %}
+
+              {% if evt.type == 'exception' %}
+                <div class="error">❌ {{ evt.error }}</div>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+
+        <div class="io">
+          <h4>Program Stdout</h4>
+          <pre>{{ summary.stdout }}</pre>
+          <h4>Program Stderr</h4>
+          <pre>{{ summary.stderr }}</pre>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+<script>
+function loadExample(which){
+  if(which==='basic'){
+    document.getElementById('code').value = `arr = [1, 2, 3]\ns = 0\nfor i in range(len(arr)+1):\n    s += arr[i]\nprint('Sum:', s)\n`;
+    document.getElementById('input_data').value = '';
+  } else if(which==='dp'){
+    document.getElementById('code').value = `n = 6\ndp = [0]*(n+1)\ndp[1] = 1\nfor i in range(2, n+1):\n    dp[i] = dp[i-1] + dp[i-2]\nprint('dp:', dp)\nprint('F(n):', dp[n])\n`;
+    document.getElementById('input_data').value = '';
+  }
+}
+</script>
+</body>
+</html>

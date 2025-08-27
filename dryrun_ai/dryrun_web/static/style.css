@@ -1,0 +1,59 @@
+/* style.css - simple 50/50 split layout */
+* { box-sizing: border-box; font-family: Inter, Arial, sans-serif; }
+body { margin: 0; background: #f6f7fb; color: #111; }
+.container { display: flex; min-height: 100vh; }
+
+/* left */
+.left {
+  width: 50%;
+  padding: 24px;
+  background: #ffffff;
+  border-right: 1px solid #e0e0e0;
+  overflow: auto;
+}
+.left h2 { margin-top: 0; }
+.left textarea { width: 100%; font-family: monospace; font-size: 13px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; resize: vertical; }
+.run-btn {
+  margin-top: 12px;
+  padding: 10px 16px;
+  background: #0b5fff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.options { margin-top: 10px; color:#444; }
+.examples { margin-top: 16px; }
+
+/* right */
+.right {
+  width: 50%;
+  padding: 20px;
+  background: #0f1720;
+  color: #e6eef8;
+  overflow: auto;
+}
+.right h2 { margin-top: 0; color: #fff; }
+.placeholder { color: #b8c4d6; padding: 20px; background: rgba(255,255,255,0.02); border-radius: 6px; }
+.meta { margin-bottom: 12px; color: #bcd; }
+.alert { color: #ff7b7b; font-weight: bold; margin-left: 8px; }
+
+.events { display: flex; flex-direction: column; gap: 12px; }
+.event-card {
+  padding: 12px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.03);
+}
+.ev-header { display:flex; gap:12px; align-items:center; margin-bottom:6px; flex-wrap:wrap; }
+.ev-type { font-size: 12px; color:#ffd58a; }
+.ev-line { font-size: 13px; color:#b7d7ff; }
+.ev-code { background:#082532; padding:4px 8px; border-radius:4px; font-family: monospace; color:#bfeee0; }
+.explain { margin-top:6px; color:#fff; background: rgba(255,255,255,0.02); padding:6px; border-radius:4px; }
+.locals pre { margin:6px 0; color:#cfeadf; background: rgba(0,0,0,0.03); padding:6px; border-radius:4px; white-space:pre-wrap; word-break:break-word; color:#aee0d2; }
+.changes { font-size:13px; color:#ffd; margin-top:6px; }
+.c-added { color: #a3f7a3; }
+.c-updated { color: #ffd58a; }
+.c-removed { color: #ffb3b3; }
+.error { color: #ff9a9a; margin-top:6px; font-weight:600; }
+.io pre { background: rgba(255,255,255,0.02); padding:8px; border-radius:6px; color:#dfeff8; overflow:auto; }
